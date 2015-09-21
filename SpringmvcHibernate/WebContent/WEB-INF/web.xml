@@ -14,6 +14,7 @@
     <listener-class>    org.springframework.web.context.ContextLoaderListener
         </listener-class>
   </listener>
+
   <servlet>
     <servlet-name>HelloWeb</servlet-name>
     <servlet-class>
@@ -29,6 +30,7 @@
     <servlet-name>HelloWeb</servlet-name>
     <url-pattern>*.do</url-pattern>
   </servlet-mapping>
+    
   <filter>
     <filter-name>encodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>

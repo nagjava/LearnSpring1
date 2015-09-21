@@ -8,11 +8,18 @@
 <title>main</title>
 </head>
 <body>
-	<h2>login</h2>
 	username: ${user.username }
 	<br>
-	<table>
-
+	<div>
+	<table style="
+    border-spacing: 10px;
+    border-collapse: separate;">
+			<tr>
+    		<td>username</td>
+    		<td>userid</td>
+    		<td>authority</td>
+    		<td>delete</td>
+		</tr>
 		<c:forEach items="${list}" var="var">
 			<tr>
 				<td>${ var.username}</td>
@@ -22,5 +29,7 @@
 			</tr>
 		</c:forEach>
 	</table>
+	</div>
 </body>
+
 </html>

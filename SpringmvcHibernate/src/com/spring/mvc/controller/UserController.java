@@ -1,10 +1,14 @@
 package com.spring.mvc.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 import org.apache.commons.logging.Log;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.spring.mvc.bean.User;
 import com.spring.mvc.dao.daoImpl.UserDaoImpl;
 import com.spring.mvc.service.IUserService;
+import com.spring.util.CertificationGenerator;
 import com.spring.util.Message;
 
 @Controller
@@ -48,13 +53,13 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/dispatchLogin")
-	public String dispatchLogin() {
+	public String dispatchLogin(HttpServletRequest request,HttpServletResponse response) {
 		return "login";
 	}
 
 	@RequestMapping(value = "login")
-	public String login(@ModelAttribute("User") User user,
-			HttpServletRequest request) {
+	public String login(@ModelAttribute("User") User user,@RequestParam("checkCode") String checkCode
+			,HttpServletRequest request) {
 		request.setAttribute("user", user);
 		List list;
 		if (helloSevice.login(user)) {
