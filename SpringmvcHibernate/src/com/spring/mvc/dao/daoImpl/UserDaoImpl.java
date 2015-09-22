@@ -35,7 +35,7 @@ public class UserDaoImpl extends BaseHibernateDao implements UserDao {
 		Query query=sessionFactory.getCurrentSession().createQuery("from User where username=:username and password=:password");
 		query.setString("username", user.getUsername());
 		query.setString("password", user.getPassword());
-		if (query.list().size()==1) 
+		if (query.list().size()>0) 
 			return true;
 		return false;
 

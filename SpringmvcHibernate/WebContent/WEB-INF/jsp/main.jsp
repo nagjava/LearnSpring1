@@ -8,7 +8,7 @@
 <title>main</title>
 </head>
 <body>
-	username: ${user.username }
+	username: ${sessionScope.username}
 	<br>
 	<div>
 	<table style="

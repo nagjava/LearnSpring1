@@ -11,7 +11,7 @@
 				username:<input name="username"><br/>
 				password:<input type="password"  name="password"><br/>
 				验证码：<input name=checkCode>
-				<img id="img" alt=""  src="${pageContext.request.contextPath}/certificate">
+				<img id="img" alt=""  src="${pageContext.request.contextPath}/certificate.do">
 				<input type="submit" ><br/>
 		</form>
 </body>

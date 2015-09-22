@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.portlet.ModelAndView;
 
 import com.spring.mvc.bean.User;
 import com.spring.mvc.dao.daoImpl.UserDaoImpl;
@@ -29,7 +29,7 @@ import com.spring.util.Message;
 
 @Controller
 public class UserController {
-	private  Logger logger =Logger.getLogger(UserController.class);
+	private Logger logger = Logger.getLogger(UserController.class);
 	private IUserService helloSevice;
 
 	public IUserService getHelloSevice() {
@@ -53,19 +53,25 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/dispatchLogin")
-	public String dispatchLogin(HttpServletRequest request,HttpServletResponse response) {
+	public String dispatchLogin(HttpServletRequest request,
+			HttpServletResponse response) {
 		return "login";
 	}
 
 	@RequestMapping(value = "login")
-	public String login(@ModelAttribute("User") User user,@RequestParam("checkCode") String checkCode
-			,HttpServletRequest request) {
-		request.setAttribute("user", user);
+	public String login(@ModelAttribute("User") User user,
+			@RequestParam("checkCode") String checkCode,
+			HttpServletRequest request) {
 		List list;
+		String code=(String) request.getSession().getAttribute("code");
+		if (!checkCode.equalsIgnoreCase(code)) {
+			return "login";
+		}
 		if (helloSevice.login(user)) {
 			list = helloSevice.getAll();
 			request.setAttribute("list", list);
-			System.out.println(user.getUsername() + list.size());
+			request.setAttribute("user", user);
+			request.getSession().setAttribute("username", user.getUsername());
 			return "main";
 		} else {
 			return "login";
@@ -84,18 +90,33 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "delete")
-	public String deleteUser(@RequestParam(value = "id") int id,HttpServletRequest req) {
+	public String deleteUser(@RequestParam(value = "id") int id,
+			HttpServletRequest req, HttpServletResponse response)
+			throws IOException {
 		logger.info("delete");
 		helloSevice.deleteUser(id);
 		List list = helloSevice.getAll();
 		req.setAttribute("list", list);
-		return "main";
+		return "redirect:getAll.do";
+		// response.sendRedirect("redirect:/getAll.do");
 	}
+
 	@RequestMapping(value = "delete1")
-	public String delete(@ModelAttribute("User") User user,HttpServletRequest req) {
+	public String delete(@ModelAttribute("User") User user,
+			HttpServletRequest req) {
 		helloSevice.deleteUser(user);
 		List list = helloSevice.getAll();
 		req.setAttribute("list", list);
+		return "main";
+	}
+
+	@RequestMapping(value = "getAll")
+	public String getAll(HttpServletRequest request, ModelMap map) {
+		if (null==request.getSession().getAttribute("username")) {
+				return "login";
+		}
+		List list = helloSevice.getAll();
+		map.addAttribute("list", list);
 		return "main";
 	}
 }
